@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silent Signal - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Catppuccin Mocha Admin Theme */
+        :root {
+            --base: #1e1e2e;
+            --mantle: #181825;
+            --surface: #313244;
+            --overlay: #6c7086;
+            --text: #cdd6f4;
+            --subtext: #a6adc8;
+            --blue: #89b4fa;
+            --mauve: #cba6f7;
+            --green: #a6e3a1;
+            --red: #f38ba8;
+            --yellow: #f9e2af;
+            --teal: #94e2d5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--base);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--mantle);
+            border-right: 1px solid var(--surface);
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--surface);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            color: var(--blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            color: var(--subtext);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            color: var(--subtext);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: var(--surface);
+            color: var(--blue);
+            border-left-color: var(--blue);
+        }
+
+        .sidebar-nav i {
+            margin-right: 1rem;
+            width: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--surface);
+        }
+
+        .content-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--blue);
+        }
+
+        .logout-btn {
+            background: var(--red);
+            color: var(--base);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #e74c3c;
+            transform: translateY(-1px);
+        }
+
+        /* Login Form */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--base);
+        }
+
+        .login-form {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--overlay);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            color: var(--blue);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--subtext);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--mantle);
+            border: 1px solid var(--overlay);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: var(--blue);
+            color: var(--base);
+            border: none;
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #7aa2f7;
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            background: var(--red);
+            color: var(--base);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--overlay);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--overlay);
+        }
+
+        .data-table th {
+            background: var(--mantle);
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: var(--mantle);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: var(--base);
+        }
+
+        .btn-success {
+            background: var(--green);
+            color: var(--base);
+        }
+
+        .btn-danger {
+            background: var(--red);
+            color: var(--base);
+        }
+
+        .btn-warning {
+            background: var(--yellow);
+            color: var(--base);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--overlay);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--overlay);
+        }
+
+        .modal-title {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--blue);
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--subtext);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .close-btn:hover {
+            color: var(--red);
+        }
+
+        /* Form Styles */
+        .modal-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--subtext);
+            font-weight: 500;
+        }
+
+        .modal-form input,
+        .modal-form textarea,
+        .modal-form select {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--mantle);
+            border: 1px solid var(--overlay);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .modal-form input:focus,
+        .modal-form textarea:focus,
+        .modal-form select:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        .modal-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Skills Array Input */
+        .skills-container {
+            border: 1px solid var(--overlay);
+            border-radius: 6px;
+            padding: 1rem;
+            background: var(--mantle);
+        }
+
+        .skill-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .skill-item input {
+            margin-bottom: 0;
+        }
+
+        .skill-item button {
+            padding: 0.5rem;
+            background: var(--red);
+            color: var(--base);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-skill-btn {
+            background: var(--green);
+            color: var(--base);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--subtext);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--subtext);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--overlay);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <form id="loginForm" class="login-form">
+            <h2 class="login-title">Silent Signal Admin</h2>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Access Admin Panel</button>
+        </form>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-container" style="display: none;">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Silent Signal</div>
+                <div class="sidebar-subtitle">Admin Panel</div>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" data-section="dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" data-section="members"><i class="fas fa-users"></i> Team Members</a></li>
+                <li><a href="#" data-section="achievements"><i class="fas fa-trophy"></i> Achievements</a></li>
+                <li><a href="#" data-section="timeline"><i class="fas fa-clock"></i> Timeline</a></li>
+                <li><a href="#" data-section="philosophy"><i class="fas fa-quote-left"></i> Philosophy</a></li>
+                <li><a href="#" data-section="skills"><i class="fas fa-cogs"></i> Skills</a></li>
+                <li><a href="#" data-section="messages"><i class="fas fa-envelope"></i> Messages</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title" id="contentTitle">Dashboard</h1>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 8px; border: 1px solid var(--overlay);">
+                        <h3 style="color: var(--blue); margin-bottom: 1rem;"><i class="fas fa-users"></i> Team Members</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--green);" id="membersCount">-</div>
+                    </div>
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 8px; border: 1px solid var(--overlay);">
+                        <h3 style="color: var(--blue); margin-bottom: 1rem;"><i class="fas fa-trophy"></i> Achievements</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--yellow);" id="achievementsCount">-</div>
+                    </div>
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 8px; border: 1px solid var(--overlay);">
+                        <h3 style="color: var(--blue); margin-bottom: 1rem;"><i class="fas fa-clock"></i> Timeline Events</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--teal);" id="timelineCount">-</div>
+                    </div>
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 8px; border: 1px solid var(--overlay);">
+                        <h3 style="color: var(--blue); margin-bottom: 1rem;"><i class="fas fa-cogs"></i> Skills</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--mauve);" id="skillsCount">-</div>
+                    </div>
+                    <div style="background: var(--surface); padding: 2rem; border-radius: 8px; border: 1px solid var(--overlay);">
+                        <h3 style="color: var(--blue); margin-bottom: 1rem;"><i class="fas fa-envelope"></i> Messages</h3>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--red);" id="messagesCount">-</div>
+                    </div>
+                </div>
+                <div style="background: var(--surface); padding: 2rem; border-radius: 8px; border: 1px solid var(--overlay);">
+                    <h3 style="color: var(--blue); margin-bottom: 1rem;">Quick Actions</h3>
+                    <button class="btn btn-primary" onclick="showSection('members')">Manage Team</button>
+                    <button class="btn btn-success" onclick="showSection('achievements')">Add Achievement</button>
+                    <button class="btn btn-warning" onclick="showSection('timeline')">Update Timeline</button>
+                </div>
+            </section>
+
+            <!-- Members Section -->
+            <section id="members" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Team Members</h2>
+                    <button class="btn btn-primary" onclick="openMemberModal()">
+                        <i class="fas fa-plus"></i> Add Member
+                    </button>
+                </div>
+                <div id="membersTable"></div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section id="achievements" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Achievements</h2>
+                    <button class="btn btn-primary" onclick="openAchievementModal()">
+                        <i class="fas fa-plus"></i> Add Achievement
+                    </button>
+                </div>
+                <div id="achievementsTable"></div>
+            </section>
+
+            <!-- Timeline Section -->
+            <section id="timeline" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Timeline Events</h2>
+                    <button class="btn btn-primary" onclick="openTimelineModal()">
+                        <i class="fas fa-plus"></i> Add Event
+                    </button>
+                </div>
+                <div id="timelineTable"></div>
+            </section>
+
+            <!-- Philosophy Section -->
+            <section id="philosophy" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Philosophy Quotes</h2>
+                    <button class="btn btn-primary" onclick="openPhilosophyModal()">
+                        <i class="fas fa-plus"></i> Add Quote
+                    </button>
+                </div>
+                <div id="philosophyTable"></div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Team Skills</h2>
+                    <button class="btn btn-primary" onclick="openSkillModal()">
+                        <i class="fas fa-plus"></i> Add Skill
+                    </button>
+                </div>
+                <div id="skillsTable"></div>
+            </section>
+
+            <!-- Messages Section -->
+            <section id="messages" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>Contact Messages</h2>
+                    <div>
+                        <button class="btn btn-success" onclick="markAllAsRead()">
+                            <i class="fas fa-check-double"></i> Mark All Read
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteAllMessages()">
+                            <i class="fas fa-trash"></i> Delete All
+                        </button>
+                    </div>
+                </div>
+                <div id="messagesTable"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Member Modal -->
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="memberModalTitle">Add Member</h3>
+                <button class="close-btn" onclick="closeMemberModal()">&times;</button>
+            </div>
+            <form id="memberForm" class="modal-form">
+                <input type="hidden" id="memberId">
+                <div class="form-group">
+                    <label for="memberName">Name *</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberAlias">Alias</label>
+                    <input type="text" id="memberAlias">
+                </div>
+                <div class="form-group">
+                    <label for="memberRole">Role *</label>
+                    <input type="text" id="memberRole" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberDescription">Description</label>
+                    <textarea id="memberDescription" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="memberAvatar">Avatar Letter</label>
+                    <input type="text" id="memberAvatar" maxlength="1">
+                </div>
+                <div class="form-group">
+                    <label>Skills</label>
+                    <div class="skills-container">
+                        <div id="skillsContainer"></div>
+                        <button type="button" class="add-skill-btn" onclick="addSkillInput()">
+                            <i class="fas fa-plus"></i> Add Skill
+                        </button>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-danger" onclick="closeMemberModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Achievement Modal -->
+    <div id="achievementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="achievementModalTitle">Add Achievement</h3>
+                <button class="close-btn" onclick="closeAchievementModal()">&times;</button>
+            </div>
+            <form id="achievementForm" class="modal-form">
+                <input type="hidden" id="achievementId">
+                <div class="form-group">
+                    <label for="achievementName">Name *</label>
+                    <input type="text" id="achievementName" required>
+                </div>
+                <div class="form-group">
+                    <label for="achievementRank">Rank *</label>
+                    <input type="text" id="achievementRank" required>
+                </div>
+                <div class="form-group">
+                    <label for="achievementYear">Year/Status *</label>
+                    <input type="text" id="achievementYear" required>
+                </div>
+                <div class="form-group">
+                    <label for="achievementInsight">Insight</label>
+                    <textarea id="achievementInsight" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="achievementSignal">Signal Strength (1-4)</label>
+                    <select id="achievementSignal">
+                        <option value="1">1 Bar</option>
+                        <option value="2">2 Bars</option>
+                        <option value="3" selected>3 Bars</option>
+                        <option value="4">4 Bars</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="achievementActive"> Currently Active
+                    </label>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-danger" onclick="closeAchievementModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Achievement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Timeline Modal -->
+    <div id="timelineModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="timelineModalTitle">Add Timeline Event</h3>
+                <button class="close-btn" onclick="closeTimelineModal()">&times;</button>
+            </div>
+            <form id="timelineForm" class="modal-form">
+                <input type="hidden" id="timelineId">
+                <div class="form-group">
+                    <label for="timelineDate">Date *</label>
+                    <input type="text" id="timelineDate" required placeholder="e.g., March 27-29, 2026">
+                </div>
+                <div class="form-group">
+                    <label for="timelineTitle">Title *</label>
+                    <input type="text" id="timelineTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="timelineResult">Result *</label>
+                    <input type="text" id="timelineResult" required>
+                </div>
+                <div class="form-group">
+                    <label for="timelineLearning">Learning/Notes</label>
+                    <textarea id="timelineLearning" rows="4"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-danger" onclick="closeTimelineModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Philosophy Modal -->
+    <div id="philosophyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="philosophyModalTitle">Add Philosophy Quote</h3>
+                <button class="close-btn" onclick="closePhilosophyModal()">&times;</button>
+            </div>
+            <form id="philosophyForm" class="modal-form">
+                <input type="hidden" id="philosophyId">
+                <div class="form-group">
+                    <label for="philosophyQuote">Quote *</label>
+                    <textarea id="philosophyQuote" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="philosophyOrder">Order Index</label>
+                    <input type="number" id="philosophyOrder" value="0" min="0">
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-danger" onclick="closePhilosophyModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Quote</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Skill Modal -->
+    <div id="skillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="skillModalTitle">Add Skill</h3>
+                <button class="close-btn" onclick="closeSkillModal()">&times;</button>
+            </div>
+            <form id="skillForm" class="modal-form">
+                <input type="hidden" id="skillId">
+                <div class="form-group">
+                    <label for="skillName">Skill Name *</label>
+                    <input type="text" id="skillName" required>
+                </div>
+                <div class="form-group">
+                    <label for="skillDescription">Description</label>
+                    <input type="text" id="skillDescription" placeholder="e.g., Offensive Depth">
+                </div>
+                <div class="form-group">
+                    <label for="skillPercentage">Percentage (0-100) *</label>
+                    <input type="number" id="skillPercentage" min="0" max="100" required>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-danger" onclick="closeSkillModal()">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Skill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let authToken = localStorage.getItem('adminToken');
+        let currentData = {
+            members: [],
+            achievements: [],
+            timeline: [],
+            philosophy: [],
+            skills: []
+        };
+
+        // API Base URL
+        const API_BASE = '/api';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authToken) {
+                showAdminPanel();
+            } else {
+                showLoginForm();
+            }
+        });
+
+        // Authentication
+        function showLoginForm() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'flex';
+            loadDashboard();
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    localStorage.setItem('adminToken', authToken);
+                    showAdminPanel();
+                } else {
+                    errorDiv.textContent = data.error || 'Login failed';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Connection error. Please try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            showLoginForm();
+        }
+
+        // API Helper
+        async function apiCall(endpoint, options = {}) {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                ...options
+            };
+            
+            const response = await fetch(`${API_BASE}${endpoint}`, config);
+            
+            if (response.status === 401 || response.status === 403) {
+                logout();
+                throw new Error('Authentication failed');
+            }
+            
+            return response.json();
+        }
+
+        // Navigation
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.dataset.section;
+                showSection(section);
+            });
+        });
+
+        function showSection(sectionName) {
+            // Update active nav
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${sectionName}"]`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Update title
+            const titles = {
+                dashboard: 'Dashboard',
+                members: 'Team Members',
+                achievements: 'Achievements',
+                timeline: 'Timeline',
+                philosophy: 'Philosophy',
+                skills: 'Skills',
+                messages: 'Messages'
+            };
+            document.getElementById('contentTitle').textContent = titles[sectionName];
+            
+            // Load section data
+            switch(sectionName) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'members':
+                    loadMembers();
+                    break;
+                case 'achievements':
+                    loadAchievements();
+                    break;
+                case 'timeline':
+                    loadTimeline();
+                    break;
+                case 'philosophy':
+                    loadPhilosophy();
+                    break;
+                case 'skills':
+                    loadSkills();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+            }
+        }
+        // Dashboard
+        async function loadDashboard() {
+            try {
+                const [members, achievements, timeline, skills, messages] = await Promise.all([
+                    apiCall('/admin/members'),
+                    apiCall('/admin/achievements'),
+                    apiCall('/admin/timeline'),
+                    apiCall('/admin/skills'),
+                    apiCall('/admin/messages')
+                ]);
+                
+                document.getElementById('membersCount').textContent = members.length;
+                document.getElementById('achievementsCount').textContent = achievements.length;
+                document.getElementById('timelineCount').textContent = timeline.length;
+                document.getElementById('skillsCount').textContent = skills.length;
+                document.getElementById('messagesCount').textContent = messages.filter(m => !m.is_read).length;
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Members Management
+        async function loadMembers() {
+            try {
+                const members = await apiCall('/admin/members');
+                currentData.members = members;
+                renderMembersTable(members);
+            } catch (error) {
+                console.error('Error loading members:', error);
+            }
+        }
+
+        function renderMembersTable(members) {
+            const container = document.getElementById('membersTable');
+            
+            if (members.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No team members yet</p></div>';
+                return;
+            }
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Alias</th>
+                            <th>Role</th>
+                            <th>Skills</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${members.map(member => `
+                            <tr>
+                                <td>${member.name}</td>
+                                <td>${member.alias || '-'}</td>
+                                <td>${member.role}</td>
+                                <td>${member.skills.map(s => s.name).join(', ')}</td>
+                                <td>
+                                    <button class="btn btn-warning" onclick="editMember(${member.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteMember(${member.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function openMemberModal(member = null) {
+            const modal = document.getElementById('memberModal');
+            const title = document.getElementById('memberModalTitle');
+            const form = document.getElementById('memberForm');
+            
+            if (member) {
+                title.textContent = 'Edit Member';
+                document.getElementById('memberId').value = member.id;
+                document.getElementById('memberName').value = member.name;
+                document.getElementById('memberAlias').value = member.alias || '';
+                document.getElementById('memberRole').value = member.role;
+                document.getElementById('memberDescription').value = member.description || '';
+                document.getElementById('memberAvatar').value = member.avatar_letter || '';
+                
+                // Load skills
+                const skillsContainer = document.getElementById('skillsContainer');
+                skillsContainer.innerHTML = '';
+                member.skills.forEach(skill => {
+                    addSkillInput(skill.name, skill.level);
+                });
+            } else {
+                title.textContent = 'Add Member';
+                form.reset();
+                document.getElementById('memberId').value = '';
+                document.getElementById('skillsContainer').innerHTML = '';
+                addSkillInput(); // Add one empty skill input
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeMemberModal() {
+            document.getElementById('memberModal').classList.remove('active');
+        }
+
+        function editMember(id) {
+            const member = currentData.members.find(m => m.id === id);
+            if (member) {
+                openMemberModal(member);
+            }
+        }
+
+        async function deleteMember(id) {
+            if (!confirm('Are you sure you want to delete this member?')) return;
+            
+            try {
+                await apiCall(`/admin/members/${id}`, { method: 'DELETE' });
+                loadMembers();
+            } catch (error) {
+                alert('Error deleting member: ' + error.message);
+            }
+        }
+
+        function addSkillInput(name = '', level = '') {
+            const container = document.getElementById('skillsContainer');
+            const skillDiv = document.createElement('div');
+            skillDiv.className = 'skill-item';
+            skillDiv.innerHTML = `
+                <input type="text" placeholder="Skill name" value="${name}" style="flex: 2;">
+                <input type="number" placeholder="Level (0-100)" value="${level}" min="0" max="100" style="flex: 1;">
+                <button type="button" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(skillDiv);
+        }
+
+        document.getElementById('memberForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('memberId').value;
+            const formData = {
+                name: document.getElementById('memberName').value,
+                alias: document.getElementById('memberAlias').value,
+                role: document.getElementById('memberRole').value,
+                description: document.getElementById('memberDescription').value,
+                avatar_letter: document.getElementById('memberAvatar').value,
+                skills: []
+            };
+            
+            // Collect skills
+            const skillItems = document.querySelectorAll('#skillsContainer .skill-item');
+            skillItems.forEach(item => {
+                const inputs = item.querySelectorAll('input');
+                const name = inputs[0].value.trim();
+                const level = parseInt(inputs[1].value) || 0;
+                if (name) {
+                    formData.skills.push({ name, level });
+                }
+            });
+            
+            try {
+                if (id) {
+                    await apiCall(`/admin/members/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    await apiCall('/admin/members', {
+                        method: 'POST',
+                        body: JSON.stringify(formData)
+                    });
+                }
+                
+                closeMemberModal();
+                loadMembers();
+            } catch (error) {
+                alert('Error saving member: ' + error.message);
+            }
+        });
+
+        // Achievements Management
+        async function loadAchievements() {
+            try {
+                const achievements = await apiCall('/admin/achievements');
+                currentData.achievements = achievements;
+                renderAchievementsTable(achievements);
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+            }
+        }
+
+        function renderAchievementsTable(achievements) {
+            const container = document.getElementById('achievementsTable');
+            
+            if (achievements.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-trophy"></i><p>No achievements yet</p></div>';
+                return;
+            }
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Rank</th>
+                            <th>Year</th>
+                            <th>Signal</th>
+                            <th>Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${achievements.map(achievement => `
+                            <tr>
+                                <td>${achievement.name}</td>
+                                <td>${achievement.rank}</td>
+                                <td>${achievement.year}</td>
+                                <td>${achievement.signal_strength} bars</td>
+                                <td>${achievement.is_active ? '✅' : '❌'}</td>
+                                <td>
+                                    <button class="btn btn-warning" onclick="editAchievement(${achievement.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteAchievement(${achievement.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function openAchievementModal(achievement = null) {
+            const modal = document.getElementById('achievementModal');
+            const title = document.getElementById('achievementModalTitle');
+            const form = document.getElementById('achievementForm');
+            
+            if (achievement) {
+                title.textContent = 'Edit Achievement';
+                document.getElementById('achievementId').value = achievement.id;
+                document.getElementById('achievementName').value = achievement.name;
+                document.getElementById('achievementRank').value = achievement.rank;
+                document.getElementById('achievementYear').value = achievement.year;
+                document.getElementById('achievementInsight').value = achievement.insight || '';
+                document.getElementById('achievementSignal').value = achievement.signal_strength;
+                document.getElementById('achievementActive').checked = achievement.is_active;
+            } else {
+                title.textContent = 'Add Achievement';
+                form.reset();
+                document.getElementById('achievementId').value = '';
+                document.getElementById('achievementSignal').value = '3';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeAchievementModal() {
+            document.getElementById('achievementModal').classList.remove('active');
+        }
+
+        function editAchievement(id) {
+            const achievement = currentData.achievements.find(a => a.id === id);
+            if (achievement) {
+                openAchievementModal(achievement);
+            }
+        }
+
+        async function deleteAchievement(id) {
+            if (!confirm('Are you sure you want to delete this achievement?')) return;
+            
+            try {
+                await apiCall(`/admin/achievements/${id}`, { method: 'DELETE' });
+                loadAchievements();
+            } catch (error) {
+                alert('Error deleting achievement: ' + error.message);
+            }
+        }
+
+        document.getElementById('achievementForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('achievementId').value;
+            const formData = {
+                name: document.getElementById('achievementName').value,
+                rank: document.getElementById('achievementRank').value,
+                year: document.getElementById('achievementYear').value,
+                insight: document.getElementById('achievementInsight').value,
+                signal_strength: parseInt(document.getElementById('achievementSignal').value),
+                is_active: document.getElementById('achievementActive').checked ? 1 : 0
+            };
+            
+            try {
+                if (id) {
+                    await apiCall(`/admin/achievements/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    await apiCall('/admin/achievements', {
+                        method: 'POST',
+                        body: JSON.stringify(formData)
+                    });
+                }
+                
+                closeAchievementModal();
+                loadAchievements();
+            } catch (error) {
+                alert('Error saving achievement: ' + error.message);
+            }
+        });
+        // Timeline Management
+        async function loadTimeline() {
+            try {
+                const timeline = await apiCall('/admin/timeline');
+                currentData.timeline = timeline;
+                renderTimelineTable(timeline);
+            } catch (error) {
+                console.error('Error loading timeline:', error);
+            }
+        }
+
+        function renderTimelineTable(timeline) {
+            const container = document.getElementById('timelineTable');
+            
+            if (timeline.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><p>No timeline events yet</p></div>';
+                return;
+            }
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Result</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${timeline.map(event => `
+                            <tr>
+                                <td>${event.date}</td>
+                                <td>${event.title}</td>
+                                <td>${event.result}</td>
+                                <td>
+                                    <button class="btn btn-warning" onclick="editTimelineEvent(${event.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteTimelineEvent(${event.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function openTimelineModal(event = null) {
+            const modal = document.getElementById('timelineModal');
+            const title = document.getElementById('timelineModalTitle');
+            const form = document.getElementById('timelineForm');
+            
+            if (event) {
+                title.textContent = 'Edit Timeline Event';
+                document.getElementById('timelineId').value = event.id;
+                document.getElementById('timelineDate').value = event.date;
+                document.getElementById('timelineTitle').value = event.title;
+                document.getElementById('timelineResult').value = event.result;
+                document.getElementById('timelineLearning').value = event.learning || '';
+            } else {
+                title.textContent = 'Add Timeline Event';
+                form.reset();
+                document.getElementById('timelineId').value = '';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeTimelineModal() {
+            document.getElementById('timelineModal').classList.remove('active');
+        }
+
+        function editTimelineEvent(id) {
+            const event = currentData.timeline.find(e => e.id === id);
+            if (event) {
+                openTimelineModal(event);
+            }
+        }
+
+        async function deleteTimelineEvent(id) {
+            if (!confirm('Are you sure you want to delete this timeline event?')) return;
+            
+            try {
+                await apiCall(`/admin/timeline/${id}`, { method: 'DELETE' });
+                loadTimeline();
+            } catch (error) {
+                alert('Error deleting timeline event: ' + error.message);
+            }
+        }
+
+        document.getElementById('timelineForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('timelineId').value;
+            const formData = {
+                date: document.getElementById('timelineDate').value,
+                title: document.getElementById('timelineTitle').value,
+                result: document.getElementById('timelineResult').value,
+                learning: document.getElementById('timelineLearning').value
+            };
+            
+            try {
+                if (id) {
+                    await apiCall(`/admin/timeline/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    await apiCall('/admin/timeline', {
+                        method: 'POST',
+                        body: JSON.stringify(formData)
+                    });
+                }
+                
+                closeTimelineModal();
+                loadTimeline();
+            } catch (error) {
+                alert('Error saving timeline event: ' + error.message);
+            }
+        });
+
+        // Philosophy Management
+        async function loadPhilosophy() {
+            try {
+                const philosophy = await apiCall('/admin/philosophy');
+                currentData.philosophy = philosophy;
+                renderPhilosophyTable(philosophy);
+            } catch (error) {
+                console.error('Error loading philosophy:', error);
+            }
+        }
+
+        function renderPhilosophyTable(philosophy) {
+            const container = document.getElementById('philosophyTable');
+            
+            if (philosophy.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-quote-left"></i><p>No philosophy quotes yet</p></div>';
+                return;
+            }
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Quote</th>
+                            <th>Order</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${philosophy.map(quote => `
+                            <tr>
+                                <td>${quote.quote}</td>
+                                <td>${quote.order_index}</td>
+                                <td>
+                                    <button class="btn btn-warning" onclick="editPhilosophyQuote(${quote.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deletePhilosophyQuote(${quote.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function openPhilosophyModal(quote = null) {
+            const modal = document.getElementById('philosophyModal');
+            const title = document.getElementById('philosophyModalTitle');
+            const form = document.getElementById('philosophyForm');
+            
+            if (quote) {
+                title.textContent = 'Edit Philosophy Quote';
+                document.getElementById('philosophyId').value = quote.id;
+                document.getElementById('philosophyQuote').value = quote.quote;
+                document.getElementById('philosophyOrder').value = quote.order_index;
+            } else {
+                title.textContent = 'Add Philosophy Quote';
+                form.reset();
+                document.getElementById('philosophyId').value = '';
+                document.getElementById('philosophyOrder').value = '0';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closePhilosophyModal() {
+            document.getElementById('philosophyModal').classList.remove('active');
+        }
+
+        function editPhilosophyQuote(id) {
+            const quote = currentData.philosophy.find(q => q.id === id);
+            if (quote) {
+                openPhilosophyModal(quote);
+            }
+        }
+
+        async function deletePhilosophyQuote(id) {
+            if (!confirm('Are you sure you want to delete this philosophy quote?')) return;
+            
+            try {
+                await apiCall(`/admin/philosophy/${id}`, { method: 'DELETE' });
+                loadPhilosophy();
+            } catch (error) {
+                alert('Error deleting philosophy quote: ' + error.message);
+            }
+        }
+
+        document.getElementById('philosophyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('philosophyId').value;
+            const formData = {
+                quote: document.getElementById('philosophyQuote').value,
+                order_index: parseInt(document.getElementById('philosophyOrder').value) || 0
+            };
+            
+            try {
+                if (id) {
+                    await apiCall(`/admin/philosophy/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    await apiCall('/admin/philosophy', {
+                        method: 'POST',
+                        body: JSON.stringify(formData)
+                    });
+                }
+                
+                closePhilosophyModal();
+                loadPhilosophy();
+            } catch (error) {
+                alert('Error saving philosophy quote: ' + error.message);
+            }
+        });
+
+        // Skills Management
+        async function loadSkills() {
+            try {
+                const skills = await apiCall('/admin/skills');
+                currentData.skills = skills;
+                renderSkillsTable(skills);
+            } catch (error) {
+                console.error('Error loading skills:', error);
+            }
+        }
+
+        function renderSkillsTable(skills) {
+            const container = document.getElementById('skillsTable');
+            
+            if (skills.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-cogs"></i><p>No skills yet</p></div>';
+                return;
+            }
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Skill Name</th>
+                            <th>Description</th>
+                            <th>Percentage</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${skills.map(skill => `
+                            <tr>
+                                <td>${skill.name}</td>
+                                <td>${skill.description || '-'}</td>
+                                <td>${skill.percentage}%</td>
+                                <td>
+                                    <button class="btn btn-warning" onclick="editSkill(${skill.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteSkill(${skill.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function openSkillModal(skill = null) {
+            const modal = document.getElementById('skillModal');
+            const title = document.getElementById('skillModalTitle');
+            const form = document.getElementById('skillForm');
+            
+            if (skill) {
+                title.textContent = 'Edit Skill';
+                document.getElementById('skillId').value = skill.id;
+                document.getElementById('skillName').value = skill.name;
+                document.getElementById('skillDescription').value = skill.description || '';
+                document.getElementById('skillPercentage').value = skill.percentage;
+            } else {
+                title.textContent = 'Add Skill';
+                form.reset();
+                document.getElementById('skillId').value = '';
+            }
+            
+            modal.classList.add('active');
+        }
+
+        function closeSkillModal() {
+            document.getElementById('skillModal').classList.remove('active');
+        }
+
+        function editSkill(id) {
+            const skill = currentData.skills.find(s => s.id === id);
+            if (skill) {
+                openSkillModal(skill);
+            }
+        }
+
+        async function deleteSkill(id) {
+            if (!confirm('Are you sure you want to delete this skill?')) return;
+            
+            try {
+                await apiCall(`/admin/skills/${id}`, { method: 'DELETE' });
+                loadSkills();
+            } catch (error) {
+                alert('Error deleting skill: ' + error.message);
+            }
+        }
+
+        document.getElementById('skillForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('skillId').value;
+            const formData = {
+                name: document.getElementById('skillName').value,
+                description: document.getElementById('skillDescription').value,
+                percentage: parseInt(document.getElementById('skillPercentage').value)
+            };
+            
+            try {
+                if (id) {
+                    await apiCall(`/admin/skills/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify(formData)
+                    });
+                } else {
+                    await apiCall('/admin/skills', {
+                        method: 'POST',
+                        body: JSON.stringify(formData)
+                    });
+                }
+                
+                closeSkillModal();
+                loadSkills();
+            } catch (error) {
+                alert('Error saving skill: ' + error.message);
+            }
+        });
+
+        // Messages Management
+        async function loadMessages() {
+            try {
+                const messages = await apiCall('/admin/messages');
+                currentData.messages = messages;
+                renderMessagesTable(messages);
+            } catch (error) {
+                console.error('Error loading messages:', error);
+            }
+        }
+
+        function renderMessagesTable(messages) {
+            const container = document.getElementById('messagesTable');
+            
+            if (messages.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-envelope"></i><p>No messages received yet</p></div>';
+                return;
+            }
+            
+            const table = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${messages.map(message => `
+                            <tr style="${!message.is_read ? 'background: rgba(137, 180, 250, 0.1); font-weight: 500;' : ''}">
+                                <td>
+                                    ${message.is_read ? 
+                                        '<span style="color: var(--green);"><i class="fas fa-check-circle"></i> Read</span>' : 
+                                        '<span style="color: var(--yellow);"><i class="fas fa-circle"></i> New</span>'
+                                    }
+                                </td>
+                                <td>${message.name}</td>
+                                <td>${message.email}</td>
+                                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${message.message}">
+                                    ${message.message}
+                                </td>
+                                <td>${new Date(message.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    ${!message.is_read ? `
+                                        <button class="btn btn-success" onclick="markAsRead(${message.id})" title="Mark as read">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    ` : ''}
+                                    <button class="btn btn-primary" onclick="viewMessage(${message.id})" title="View full message">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="deleteMessage(${message.id})" title="Delete message">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        async function markAsRead(id) {
+            try {
+                await apiCall(`/admin/messages/${id}/read`, { method: 'PUT' });
+                loadMessages();
+                loadDashboard(); // Update unread count
+            } catch (error) {
+                alert('Error marking message as read: ' + error.message);
+            }
+        }
+
+        async function deleteMessage(id) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+            
+            try {
+                await apiCall(`/admin/messages/${id}`, { method: 'DELETE' });
+                loadMessages();
+                loadDashboard(); // Update count
+            } catch (error) {
+                alert('Error deleting message: ' + error.message);
+            }
+        }
+
+        function viewMessage(id) {
+            const message = currentData.messages.find(m => m.id === id);
+            if (message) {
+                alert(`From: ${message.name} (${message.email})
+Date: ${new Date(message.created_at).toLocaleString()}
+
+Message:
+${message.message}`);
+                
+                // Mark as read if not already
+                if (!message.is_read) {
+                    markAsRead(id);
+                }
+            }
+        }
+
+        async function markAllAsRead() {
+            if (!confirm('Mark all messages as read?')) return;
+            
+            try {
+                const unreadMessages = currentData.messages.filter(m => !m.is_read);
+                await Promise.all(unreadMessages.map(m => 
+                    apiCall(`/admin/messages/${m.id}/read`, { method: 'PUT' })
+                ));
+                loadMessages();
+                loadDashboard();
+            } catch (error) {
+                alert('Error marking messages as read: ' + error.message);
+            }
+        }
+
+        async function deleteAllMessages() {
+            if (!confirm('Are you sure you want to delete ALL messages? This cannot be undone!')) return;
+            
+            try {
+                await Promise.all(currentData.messages.map(m => 
+                    apiCall(`/admin/messages/${m.id}`, { method: 'DELETE' })
+                ));
+                loadMessages();
+                loadDashboard();
+            } catch (error) {
+                alert('Error deleting messages: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
