@@ -3,7 +3,7 @@
 **Elite cybersecurity specialists competing in Capture The Flag competitions.**
 
 ## 🌐 Live Website
-**https://baje555.github.io/silentsignal/**
+**https://silentsignal404.github.io/index/**
 
 ## 👥 Team Members
 - **Pankaj Kshetri (baje)** - Web Exploitation & OSINT Specialist
