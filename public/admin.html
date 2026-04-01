@@ -108,6 +108,8 @@
         .admin-panel {
             display: none;
             padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .admin-header {
@@ -134,17 +136,222 @@
             cursor: pointer;
         }
 
-        .messages-section {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 12px;
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--surface);
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--subtext);
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn.active {
+            color: var(--blue);
+            border-bottom-color: var(--blue);
+        }
+
+        .nav-btn:hover {
+            color: var(--blue);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
         }
 
         .section-title {
             font-family: 'JetBrains Mono', monospace;
             color: var(--blue);
+            margin: 0;
+        }
+
+        .add-btn {
+            background: var(--green);
+            color: var(--base);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .item-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 8px;
             margin-bottom: 1rem;
+            border-left: 3px solid var(--blue);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: var(--blue);
+            margin: 0;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .edit-btn {
+            background: var(--blue);
+            color: var(--base);
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn {
+            background: var(--red);
+            color: var(--base);
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .form-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .form-content {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-content h3 {
+            color: var(--blue);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--subtext);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--mantle);
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--blue);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .form-actions button[type="submit"] {
+            background: var(--green);
+            color: var(--base);
+        }
+
+        .form-actions button[type="button"] {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid #333;
+        }
+
+        .skill-item {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .skill-item input {
+            flex: 1;
+        }
+
+        .skill-item input[type="number"] {
+            width: 80px;
+            flex: none;
+        }
+
+        .remove-skill {
+            background: var(--red);
+            color: var(--base);
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .messages-section {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
         }
 
         .message-item {
@@ -213,7 +420,183 @@
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
 
-        <div class="messages-section">
+        <!-- Navigation Tabs -->
+        <div class="admin-nav">
+            <button class="nav-btn active" onclick="showSection('members')">Operators</button>
+            <button class="nav-btn" onclick="showSection('achievements')">Operations</button>
+            <button class="nav-btn" onclick="showSection('timeline')">Timeline</button>
+            <button class="nav-btn" onclick="showSection('philosophy')">Philosophy</button>
+            <button class="nav-btn" onclick="showSection('messages')">Messages</button>
+        </div>
+
+        <!-- Members Section -->
+        <div id="membersSection" class="admin-section active">
+            <div class="section-header">
+                <h2 class="section-title">Team Members</h2>
+                <button class="add-btn" onclick="showAddMemberForm()">Add Member</button>
+            </div>
+            <div id="membersContainer">Loading...</div>
+            
+            <!-- Add/Edit Member Form -->
+            <div id="memberForm" class="form-modal" style="display: none;">
+                <div class="form-content">
+                    <h3 id="memberFormTitle">Add Member</h3>
+                    <form id="memberFormData">
+                        <input type="hidden" id="memberId">
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" id="memberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Alias:</label>
+                            <input type="text" id="memberAlias">
+                        </div>
+                        <div class="form-group">
+                            <label>Role:</label>
+                            <input type="text" id="memberRole" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Description:</label>
+                            <textarea id="memberDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Avatar Letter:</label>
+                            <input type="text" id="memberAvatar" maxlength="1">
+                        </div>
+                        <div id="skillsContainer">
+                            <label>Skills:</label>
+                            <div id="skillsList"></div>
+                            <button type="button" onclick="addSkill()">Add Skill</button>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit">Save</button>
+                            <button type="button" onclick="closeMemberForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div id="achievementsSection" class="admin-section">
+            <div class="section-header">
+                <h2 class="section-title">Achievements</h2>
+                <button class="add-btn" onclick="showAddAchievementForm()">Add Achievement</button>
+            </div>
+            <div id="achievementsContainer">Loading...</div>
+            
+            <!-- Add/Edit Achievement Form -->
+            <div id="achievementForm" class="form-modal" style="display: none;">
+                <div class="form-content">
+                    <h3 id="achievementFormTitle">Add Achievement</h3>
+                    <form id="achievementFormData">
+                        <input type="hidden" id="achievementId">
+                        <div class="form-group">
+                            <label>CTF Name:</label>
+                            <input type="text" id="achievementName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Rank:</label>
+                            <input type="text" id="achievementRank" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Year:</label>
+                            <input type="text" id="achievementYear" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Insight:</label>
+                            <textarea id="achievementInsight" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Signal Strength (1-4):</label>
+                            <input type="number" id="achievementSignal" min="1" max="4" value="3">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="achievementActive"> Currently Active
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit">Save</button>
+                            <button type="button" onclick="closeAchievementForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div id="timelineSection" class="admin-section">
+            <div class="section-header">
+                <h2 class="section-title">Timeline Events</h2>
+                <button class="add-btn" onclick="showAddTimelineForm()">Add Event</button>
+            </div>
+            <div id="timelineContainer">Loading...</div>
+            
+            <!-- Add/Edit Timeline Form -->
+            <div id="timelineForm" class="form-modal" style="display: none;">
+                <div class="form-content">
+                    <h3 id="timelineFormTitle">Add Timeline Event</h3>
+                    <form id="timelineFormData">
+                        <input type="hidden" id="timelineId">
+                        <div class="form-group">
+                            <label>Date:</label>
+                            <input type="text" id="timelineDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Title:</label>
+                            <input type="text" id="timelineTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Result:</label>
+                            <input type="text" id="timelineResult" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Learning:</label>
+                            <textarea id="timelineLearning" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit">Save</button>
+                            <button type="button" onclick="closeTimelineForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Philosophy Section -->
+        <div id="philosophySection" class="admin-section">
+            <div class="section-header">
+                <h2 class="section-title">Philosophy Quotes</h2>
+                <button class="add-btn" onclick="showAddPhilosophyForm()">Add Quote</button>
+            </div>
+            <div id="philosophyContainer">Loading...</div>
+            
+            <!-- Add/Edit Philosophy Form -->
+            <div id="philosophyForm" class="form-modal" style="display: none;">
+                <div class="form-content">
+                    <h3 id="philosophyFormTitle">Add Philosophy Quote</h3>
+                    <form id="philosophyFormData">
+                        <input type="hidden" id="philosophyId">
+                        <div class="form-group">
+                            <label>Quote:</label>
+                            <textarea id="philosophyQuote" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Order:</label>
+                            <input type="number" id="philosophyOrder" value="0">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit">Save</button>
+                            <button type="button" onclick="closePhilosophyForm()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="messagesSection" class="admin-section">
             <h2 class="section-title">Contact Messages</h2>
             <div id="messagesContainer">
                 <div class="no-messages">Loading messages...</div>
@@ -223,6 +606,7 @@
 
     <script>
         let authToken = localStorage.getItem('adminToken');
+        let currentSection = 'members';
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -267,7 +651,7 @@
         function showAdminPanel() {
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('adminPanel').style.display = 'block';
-            loadMessages();
+            showSection('members');
         }
 
         function logout() {
@@ -277,6 +661,548 @@
             document.getElementById('adminPanel').style.display = 'none';
         }
 
+        // Section Navigation
+        function showSection(section) {
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update sections
+            document.querySelectorAll('.admin-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            
+            currentSection = section;
+            
+            // Load data for the section
+            switch(section) {
+                case 'members':
+                    loadMembers();
+                    break;
+                case 'achievements':
+                    loadAchievements();
+                    break;
+                case 'timeline':
+                    loadTimeline();
+                    break;
+                case 'philosophy':
+                    loadPhilosophy();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+            }
+        }
+
+        // Members Management
+        async function loadMembers() {
+            try {
+                const response = await fetch('/api/admin/members', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const members = await response.json();
+                const container = document.getElementById('membersContainer');
+                
+                if (members.length === 0) {
+                    container.innerHTML = '<div class="no-messages">No members found.</div>';
+                    return;
+                }
+                
+                container.innerHTML = members.map(member => `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h3 class="item-title">${member.name}${member.alias ? ` (${member.alias})` : ''}</h3>
+                            <div class="item-actions">
+                                <button class="edit-btn" onclick="editMember(${member.id})">Edit</button>
+                                <button class="delete-btn" onclick="deleteMember(${member.id})">Delete</button>
+                            </div>
+                        </div>
+                        <p><strong>Role:</strong> ${member.role}</p>
+                        <p><strong>Description:</strong> ${member.description || 'No description'}</p>
+                        <p><strong>Skills:</strong> ${member.skills.map(s => s.name).join(', ')}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading members:', error);
+            }
+        }
+
+        function showAddMemberForm() {
+            document.getElementById('memberFormTitle').textContent = 'Add Member';
+            document.getElementById('memberFormData').reset();
+            document.getElementById('memberId').value = '';
+            document.getElementById('skillsList').innerHTML = '';
+            addSkill(); // Add one empty skill field
+            document.getElementById('memberForm').style.display = 'flex';
+        }
+
+        function closeMemberForm() {
+            document.getElementById('memberForm').style.display = 'none';
+        }
+
+        async function editMember(id) {
+            try {
+                const response = await fetch('/api/admin/members', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const members = await response.json();
+                const member = members.find(m => m.id === id);
+                
+                if (member) {
+                    document.getElementById('memberFormTitle').textContent = 'Edit Member';
+                    document.getElementById('memberId').value = member.id;
+                    document.getElementById('memberName').value = member.name;
+                    document.getElementById('memberAlias').value = member.alias || '';
+                    document.getElementById('memberRole').value = member.role;
+                    document.getElementById('memberDescription').value = member.description || '';
+                    document.getElementById('memberAvatar').value = member.avatar_letter || '';
+                    
+                    // Load skills
+                    const skillsList = document.getElementById('skillsList');
+                    skillsList.innerHTML = '';
+                    member.skills.forEach(skill => {
+                        addSkill(skill.name, skill.level);
+                    });
+                    
+                    document.getElementById('memberForm').style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error loading member:', error);
+            }
+        }
+
+        async function deleteMember(id) {
+            if (confirm('Are you sure you want to delete this member?')) {
+                try {
+                    const response = await fetch(`/api/admin/members/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.ok) {
+                        loadMembers();
+                    }
+                } catch (error) {
+                    console.error('Error deleting member:', error);
+                }
+            }
+        }
+
+        function addSkill(name = '', level = 90) {
+            const skillsList = document.getElementById('skillsList');
+            const skillDiv = document.createElement('div');
+            skillDiv.className = 'skill-item';
+            skillDiv.innerHTML = `
+                <input type="text" placeholder="Skill name" value="${name}" required>
+                <input type="number" placeholder="Level" value="${level}" min="1" max="100" required>
+                <button type="button" class="remove-skill" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            skillsList.appendChild(skillDiv);
+        }
+
+        // Member form submission
+        document.getElementById('memberFormData').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('memberId').value;
+            const skills = [];
+            
+            document.querySelectorAll('.skill-item').forEach(item => {
+                const inputs = item.querySelectorAll('input');
+                if (inputs[0].value && inputs[1].value) {
+                    skills.push({
+                        name: inputs[0].value,
+                        level: parseInt(inputs[1].value)
+                    });
+                }
+            });
+            
+            const memberData = {
+                name: document.getElementById('memberName').value,
+                alias: document.getElementById('memberAlias').value,
+                role: document.getElementById('memberRole').value,
+                description: document.getElementById('memberDescription').value,
+                avatar_letter: document.getElementById('memberAvatar').value,
+                skills: skills
+            };
+            
+            try {
+                const url = id ? `/api/admin/members/${id}` : '/api/admin/members';
+                const method = id ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(memberData)
+                });
+                
+                if (response.ok) {
+                    closeMemberForm();
+                    loadMembers();
+                }
+            } catch (error) {
+                console.error('Error saving member:', error);
+            }
+        });
+
+        // Achievements Management
+        async function loadAchievements() {
+            try {
+                const response = await fetch('/api/admin/achievements', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const achievements = await response.json();
+                const container = document.getElementById('achievementsContainer');
+                
+                if (achievements.length === 0) {
+                    container.innerHTML = '<div class="no-messages">No achievements found.</div>';
+                    return;
+                }
+                
+                container.innerHTML = achievements.map(achievement => `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h3 class="item-title">${achievement.name}</h3>
+                            <div class="item-actions">
+                                <button class="edit-btn" onclick="editAchievement(${achievement.id})">Edit</button>
+                                <button class="delete-btn" onclick="deleteAchievement(${achievement.id})">Delete</button>
+                            </div>
+                        </div>
+                        <p><strong>Rank:</strong> ${achievement.rank}</p>
+                        <p><strong>Year:</strong> ${achievement.year}</p>
+                        <p><strong>Signal Strength:</strong> ${achievement.signal_strength}/4</p>
+                        <p><strong>Active:</strong> ${achievement.is_active ? 'Yes' : 'No'}</p>
+                        <p><strong>Insight:</strong> ${achievement.insight || 'No insight provided'}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+            }
+        }
+
+        function showAddAchievementForm() {
+            document.getElementById('achievementFormTitle').textContent = 'Add Achievement';
+            document.getElementById('achievementFormData').reset();
+            document.getElementById('achievementId').value = '';
+            document.getElementById('achievementForm').style.display = 'flex';
+        }
+
+        function closeAchievementForm() {
+            document.getElementById('achievementForm').style.display = 'none';
+        }
+
+        async function editAchievement(id) {
+            try {
+                const response = await fetch('/api/admin/achievements', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const achievements = await response.json();
+                const achievement = achievements.find(a => a.id === id);
+                
+                if (achievement) {
+                    document.getElementById('achievementFormTitle').textContent = 'Edit Achievement';
+                    document.getElementById('achievementId').value = achievement.id;
+                    document.getElementById('achievementName').value = achievement.name;
+                    document.getElementById('achievementRank').value = achievement.rank;
+                    document.getElementById('achievementYear').value = achievement.year;
+                    document.getElementById('achievementInsight').value = achievement.insight || '';
+                    document.getElementById('achievementSignal').value = achievement.signal_strength;
+                    document.getElementById('achievementActive').checked = achievement.is_active;
+                    
+                    document.getElementById('achievementForm').style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error loading achievement:', error);
+            }
+        }
+
+        async function deleteAchievement(id) {
+            if (confirm('Are you sure you want to delete this achievement?')) {
+                try {
+                    const response = await fetch(`/api/admin/achievements/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.ok) {
+                        loadAchievements();
+                    }
+                } catch (error) {
+                    console.error('Error deleting achievement:', error);
+                }
+            }
+        }
+
+        // Achievement form submission
+        document.getElementById('achievementFormData').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('achievementId').value;
+            const achievementData = {
+                name: document.getElementById('achievementName').value,
+                rank: document.getElementById('achievementRank').value,
+                year: document.getElementById('achievementYear').value,
+                insight: document.getElementById('achievementInsight').value,
+                signal_strength: parseInt(document.getElementById('achievementSignal').value),
+                is_active: document.getElementById('achievementActive').checked
+            };
+            
+            try {
+                const url = id ? `/api/admin/achievements/${id}` : '/api/admin/achievements';
+                const method = id ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(achievementData)
+                });
+                
+                if (response.ok) {
+                    closeAchievementForm();
+                    loadAchievements();
+                }
+            } catch (error) {
+                console.error('Error saving achievement:', error);
+            }
+        });
+
+        // Timeline Management
+        async function loadTimeline() {
+            try {
+                const response = await fetch('/api/admin/timeline', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const timeline = await response.json();
+                const container = document.getElementById('timelineContainer');
+                
+                if (timeline.length === 0) {
+                    container.innerHTML = '<div class="no-messages">No timeline events found.</div>';
+                    return;
+                }
+                
+                container.innerHTML = timeline.map(event => `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h3 class="item-title">${event.title}</h3>
+                            <div class="item-actions">
+                                <button class="edit-btn" onclick="editTimeline(${event.id})">Edit</button>
+                                <button class="delete-btn" onclick="deleteTimeline(${event.id})">Delete</button>
+                            </div>
+                        </div>
+                        <p><strong>Date:</strong> ${event.date}</p>
+                        <p><strong>Result:</strong> ${event.result}</p>
+                        <p><strong>Learning:</strong> ${event.learning || 'No learning notes'}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading timeline:', error);
+            }
+        }
+
+        function showAddTimelineForm() {
+            document.getElementById('timelineFormTitle').textContent = 'Add Timeline Event';
+            document.getElementById('timelineFormData').reset();
+            document.getElementById('timelineId').value = '';
+            document.getElementById('timelineForm').style.display = 'flex';
+        }
+
+        function closeTimelineForm() {
+            document.getElementById('timelineForm').style.display = 'none';
+        }
+
+        async function editTimeline(id) {
+            try {
+                const response = await fetch('/api/admin/timeline', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const timeline = await response.json();
+                const event = timeline.find(t => t.id === id);
+                
+                if (event) {
+                    document.getElementById('timelineFormTitle').textContent = 'Edit Timeline Event';
+                    document.getElementById('timelineId').value = event.id;
+                    document.getElementById('timelineDate').value = event.date;
+                    document.getElementById('timelineTitle').value = event.title;
+                    document.getElementById('timelineResult').value = event.result;
+                    document.getElementById('timelineLearning').value = event.learning || '';
+                    
+                    document.getElementById('timelineForm').style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error loading timeline event:', error);
+            }
+        }
+
+        async function deleteTimeline(id) {
+            if (confirm('Are you sure you want to delete this timeline event?')) {
+                try {
+                    const response = await fetch(`/api/admin/timeline/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.ok) {
+                        loadTimeline();
+                    }
+                } catch (error) {
+                    console.error('Error deleting timeline event:', error);
+                }
+            }
+        }
+
+        // Timeline form submission
+        document.getElementById('timelineFormData').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('timelineId').value;
+            const timelineData = {
+                date: document.getElementById('timelineDate').value,
+                title: document.getElementById('timelineTitle').value,
+                result: document.getElementById('timelineResult').value,
+                learning: document.getElementById('timelineLearning').value
+            };
+            
+            try {
+                const url = id ? `/api/admin/timeline/${id}` : '/api/admin/timeline';
+                const method = id ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(timelineData)
+                });
+                
+                if (response.ok) {
+                    closeTimelineForm();
+                    loadTimeline();
+                }
+            } catch (error) {
+                console.error('Error saving timeline event:', error);
+            }
+        });
+
+        // Philosophy Management
+        async function loadPhilosophy() {
+            try {
+                const response = await fetch('/api/admin/philosophy', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const philosophy = await response.json();
+                const container = document.getElementById('philosophyContainer');
+                
+                if (philosophy.length === 0) {
+                    container.innerHTML = '<div class="no-messages">No philosophy quotes found.</div>';
+                    return;
+                }
+                
+                container.innerHTML = philosophy.map(quote => `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <h3 class="item-title">Quote #${quote.order_index + 1}</h3>
+                            <div class="item-actions">
+                                <button class="edit-btn" onclick="editPhilosophy(${quote.id})">Edit</button>
+                                <button class="delete-btn" onclick="deletePhilosophy(${quote.id})">Delete</button>
+                            </div>
+                        </div>
+                        <p><strong>Quote:</strong> "${quote.quote}"</p>
+                        <p><strong>Order:</strong> ${quote.order_index}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading philosophy:', error);
+            }
+        }
+
+        function showAddPhilosophyForm() {
+            document.getElementById('philosophyFormTitle').textContent = 'Add Philosophy Quote';
+            document.getElementById('philosophyFormData').reset();
+            document.getElementById('philosophyId').value = '';
+            document.getElementById('philosophyForm').style.display = 'flex';
+        }
+
+        function closePhilosophyForm() {
+            document.getElementById('philosophyForm').style.display = 'none';
+        }
+
+        async function editPhilosophy(id) {
+            try {
+                const response = await fetch('/api/admin/philosophy', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                const philosophy = await response.json();
+                const quote = philosophy.find(p => p.id === id);
+                
+                if (quote) {
+                    document.getElementById('philosophyFormTitle').textContent = 'Edit Philosophy Quote';
+                    document.getElementById('philosophyId').value = quote.id;
+                    document.getElementById('philosophyQuote').value = quote.quote;
+                    document.getElementById('philosophyOrder').value = quote.order_index;
+                    
+                    document.getElementById('philosophyForm').style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error loading philosophy quote:', error);
+            }
+        }
+
+        async function deletePhilosophy(id) {
+            if (confirm('Are you sure you want to delete this philosophy quote?')) {
+                try {
+                    const response = await fetch(`/api/admin/philosophy/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.ok) {
+                        loadPhilosophy();
+                    }
+                } catch (error) {
+                    console.error('Error deleting philosophy quote:', error);
+                }
+            }
+        }
+
+        // Philosophy form submission
+        document.getElementById('philosophyFormData').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('philosophyId').value;
+            const philosophyData = {
+                quote: document.getElementById('philosophyQuote').value,
+                order_index: parseInt(document.getElementById('philosophyOrder').value)
+            };
+            
+            try {
+                const url = id ? `/api/admin/philosophy/${id}` : '/api/admin/philosophy';
+                const method = id ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(philosophyData)
+                });
+                
+                if (response.ok) {
+                    closePhilosophyForm();
+                    loadPhilosophy();
+                }
+            } catch (error) {
+                console.error('Error saving philosophy quote:', error);
+            }
+        });
+
+        // Messages (existing functionality)
         async function loadMessages() {
             try {
                 const response = await fetch('/api/admin/messages', {
@@ -301,11 +1227,29 @@
                         </div>
                         <div class="message-email">${message.email}</div>
                         <div class="message-text">${message.message}</div>
+                        <button class="delete-btn" onclick="deleteMessage(${message.id})" style="margin-top: 1rem;">Delete</button>
                     </div>
                 `).join('');
                 
             } catch (error) {
                 console.error('Error loading messages:', error);
+            }
+        }
+
+        async function deleteMessage(id) {
+            if (confirm('Are you sure you want to delete this message?')) {
+                try {
+                    const response = await fetch(`/api/admin/messages/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    
+                    if (response.ok) {
+                        loadMessages();
+                    }
+                } catch (error) {
+                    console.error('Error deleting message:', error);
+                }
             }
         }
     </script>

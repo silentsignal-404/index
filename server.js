@@ -310,6 +310,45 @@ app.post('/api/admin/members', authenticateToken, (req, res) => {
   );
 });
 
+app.put('/api/admin/members/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { name, alias, role, description, skills, avatar_letter } = req.body;
+  
+  if (!name || !role) {
+    return res.status(400).json({ error: 'Name and role are required' });
+  }
+
+  const skillsJson = JSON.stringify(skills || []);
+  
+  db.run(`UPDATE members SET name = ?, alias = ?, role = ?, description = ?, skills = ?, 
+          avatar_letter = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [name, alias || '', role, description || '', skillsJson, avatar_letter || name.charAt(0), id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Member not found' });
+      }
+      res.json({ message: 'Member updated successfully' });
+    }
+  );
+});
+
+app.delete('/api/admin/members/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  
+  db.run('DELETE FROM members WHERE id = ?', [id], function(err) {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Member not found' });
+    }
+    res.json({ message: 'Member deleted successfully' });
+  });
+});
+
 // Admin API Routes - Achievements
 app.get('/api/admin/achievements', authenticateToken, (req, res) => {
   db.all('SELECT * FROM achievements ORDER BY created_at DESC', (err, rows) => {
@@ -337,6 +376,174 @@ app.post('/api/admin/achievements', authenticateToken, (req, res) => {
       res.json({ id: this.lastID, message: 'Achievement created successfully' });
     }
   );
+});
+
+app.put('/api/admin/achievements/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { name, rank, year, insight, signal_strength, is_active } = req.body;
+  
+  if (!name || !rank || !year) {
+    return res.status(400).json({ error: 'Name, rank, and year are required' });
+  }
+
+  db.run(`UPDATE achievements SET name = ?, rank = ?, year = ?, insight = ?, 
+          signal_strength = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [name, rank, year, insight || '', signal_strength || 3, is_active || 0, id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Achievement not found' });
+      }
+      res.json({ message: 'Achievement updated successfully' });
+    }
+  );
+});
+
+app.delete('/api/admin/achievements/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  
+  db.run('DELETE FROM achievements WHERE id = ?', [id], function(err) {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Achievement not found' });
+    }
+    res.json({ message: 'Achievement deleted successfully' });
+  });
+});
+
+// Admin API Routes - Timeline
+app.get('/api/admin/timeline', authenticateToken, (req, res) => {
+  db.all('SELECT * FROM timeline ORDER BY created_at DESC', (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(rows);
+  });
+});
+
+app.post('/api/admin/timeline', authenticateToken, (req, res) => {
+  const { date, title, result, learning } = req.body;
+  
+  if (!date || !title || !result) {
+    return res.status(400).json({ error: 'Date, title, and result are required' });
+  }
+
+  db.run(`INSERT INTO timeline (date, title, result, learning, updated_at) 
+          VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+    [date, title, result, learning || ''],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json({ id: this.lastID, message: 'Timeline event created successfully' });
+    }
+  );
+});
+
+app.put('/api/admin/timeline/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { date, title, result, learning } = req.body;
+  
+  if (!date || !title || !result) {
+    return res.status(400).json({ error: 'Date, title, and result are required' });
+  }
+
+  db.run(`UPDATE timeline SET date = ?, title = ?, result = ?, learning = ?, 
+          updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [date, title, result, learning || '', id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Timeline event not found' });
+      }
+      res.json({ message: 'Timeline event updated successfully' });
+    }
+  );
+});
+
+app.delete('/api/admin/timeline/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  
+  db.run('DELETE FROM timeline WHERE id = ?', [id], function(err) {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Timeline event not found' });
+    }
+    res.json({ message: 'Timeline event deleted successfully' });
+  });
+});
+
+// Admin API Routes - Philosophy
+app.get('/api/admin/philosophy', authenticateToken, (req, res) => {
+  db.all('SELECT * FROM philosophy ORDER BY order_index', (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(rows);
+  });
+});
+
+app.post('/api/admin/philosophy', authenticateToken, (req, res) => {
+  const { quote, order_index } = req.body;
+  
+  if (!quote) {
+    return res.status(400).json({ error: 'Quote is required' });
+  }
+
+  db.run(`INSERT INTO philosophy (quote, order_index, updated_at) 
+          VALUES (?, ?, CURRENT_TIMESTAMP)`,
+    [quote, order_index || 0],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json({ id: this.lastID, message: 'Philosophy quote created successfully' });
+    }
+  );
+});
+
+app.put('/api/admin/philosophy/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { quote, order_index } = req.body;
+  
+  if (!quote) {
+    return res.status(400).json({ error: 'Quote is required' });
+  }
+
+  db.run(`UPDATE philosophy SET quote = ?, order_index = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [quote, order_index || 0, id],
+    function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'Philosophy quote not found' });
+      }
+      res.json({ message: 'Philosophy quote updated successfully' });
+    }
+  );
+});
+
+app.delete('/api/admin/philosophy/:id', authenticateToken, (req, res) => {
+  const { id } = req.params;
+  
+  db.run('DELETE FROM philosophy WHERE id = ?', [id], function(err) {
+    if (err) {
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Philosophy quote not found' });
+    }
+    res.json({ message: 'Philosophy quote deleted successfully' });
+  });
 });
 
 // Admin API Routes - Messages
