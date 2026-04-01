@@ -746,70 +746,6 @@
             opacity: 0.3;
         }
 
-        /* Skills Visualization */
-        .skills-radar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .skill-radar-item {
-            text-align: center;
-            position: relative;
-        }
-
-        .skill-circle {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 1rem;
-            position: relative;
-        }
-
-        .skill-circle svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-        }
-
-        .skill-circle-bg {
-            fill: none;
-            stroke: rgba(137, 180, 250, 0.1);
-            stroke-width: 8;
-        }
-
-        .skill-circle-progress {
-            fill: none;
-            stroke: var(--blue);
-            stroke-width: 8;
-            stroke-linecap: round;
-            transition: stroke-dasharray 2s ease;
-            filter: drop-shadow(0 0 10px rgba(137, 180, 250, 0.5));
-        }
-
-        .skill-percentage {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--blue);
-        }
-
-        .skill-radar-name {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-        }
-
-        .skill-radar-desc {
-            color: var(--subtext);
-            font-size: 0.9rem;
-        }
-
         /* Contact Section */
         .contact-container {
             max-width: 800px;
@@ -934,10 +870,6 @@
             .timeline-node {
                 left: 15px !important;
                 right: auto !important;
-            }
-            
-            .skills-radar {
-                grid-template-columns: 1fr;
             }
             
             .skill-circle {
@@ -1078,7 +1010,6 @@
                 <li><a href="#achievements">Operations</a></li>
                 <li><a href="#timeline">Timeline</a></li>
                 <li><a href="#philosophy">Philosophy</a></li>
-                <li><a href="#skills">Capabilities</a></li>
                 <li><a href="#contact">Transmit</a></li>
             </ul>
         </div>
@@ -1223,90 +1154,6 @@
                 <div class="philosophy-quote">
                     Precision over volume.
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="fade-in">
-        <h2 class="section-title">&gt;_ Capabilities</h2>
-        <div class="skills-radar">
-            <div class="skill-radar-item">
-                <div class="skill-circle">
-                    <svg viewBox="0 0 200 200">
-                        <circle class="skill-circle-bg" cx="100" cy="100" r="80"></circle>
-                        <circle class="skill-circle-progress" cx="100" cy="100" r="80" 
-                                stroke-dasharray="0 502" data-progress="95"></circle>
-                    </svg>
-                    <div class="skill-percentage">95%</div>
-                </div>
-                <div class="skill-radar-name">Web Exploitation</div>
-                <div class="skill-radar-desc">Offensive Depth</div>
-            </div>
-            
-            <div class="skill-radar-item">
-                <div class="skill-circle">
-                    <svg viewBox="0 0 200 200">
-                        <circle class="skill-circle-bg" cx="100" cy="100" r="80"></circle>
-                        <circle class="skill-circle-progress" cx="100" cy="100" r="80" 
-                                stroke-dasharray="0 502" data-progress="92"></circle>
-                    </svg>
-                    <div class="skill-percentage">92%</div>
-                </div>
-                <div class="skill-radar-name">OSINT</div>
-                <div class="skill-radar-desc">Intelligence Gathering</div>
-            </div>
-            
-            <div class="skill-radar-item">
-                <div class="skill-circle">
-                    <svg viewBox="0 0 200 200">
-                        <circle class="skill-circle-bg" cx="100" cy="100" r="80"></circle>
-                        <circle class="skill-circle-progress" cx="100" cy="100" r="80" 
-                                stroke-dasharray="0 502" data-progress="90"></circle>
-                    </svg>
-                    <div class="skill-percentage">90%</div>
-                </div>
-                <div class="skill-radar-name">Binary Exploitation</div>
-                <div class="skill-radar-desc">System Control</div>
-            </div>
-            
-            <div class="skill-radar-item">
-                <div class="skill-circle">
-                    <svg viewBox="0 0 200 200">
-                        <circle class="skill-circle-bg" cx="100" cy="100" r="80"></circle>
-                        <circle class="skill-circle-progress" cx="100" cy="100" r="80" 
-                                stroke-dasharray="0 502" data-progress="85"></circle>
-                    </svg>
-                    <div class="skill-percentage">85%</div>
-                </div>
-                <div class="skill-radar-name">Reverse Engineering</div>
-                <div class="skill-radar-desc">Code Analysis</div>
-            </div>
-            
-            <div class="skill-radar-item">
-                <div class="skill-circle">
-                    <svg viewBox="0 0 200 200">
-                        <circle class="skill-circle-bg" cx="100" cy="100" r="80"></circle>
-                        <circle class="skill-circle-progress" cx="100" cy="100" r="80" 
-                                stroke-dasharray="0 502" data-progress="80"></circle>
-                    </svg>
-                    <div class="skill-percentage">80%</div>
-                </div>
-                <div class="skill-radar-name">Cryptography</div>
-                <div class="skill-radar-desc">Cipher Breaking</div>
-            </div>
-            
-            <div class="skill-radar-item">
-                <div class="skill-circle">
-                    <svg viewBox="0 0 200 200">
-                        <circle class="skill-circle-bg" cx="100" cy="100" r="80"></circle>
-                        <circle class="skill-circle-progress" cx="100" cy="100" r="80" 
-                                stroke-dasharray="0 502" data-progress="78"></circle>
-                    </svg>
-                    <div class="skill-percentage">78%</div>
-                </div>
-                <div class="skill-radar-name">Digital Forensics</div>
-                <div class="skill-radar-desc">Evidence Recovery</div>
             </div>
         </div>
     </section>
@@ -1460,21 +1307,6 @@
             });
         }
 
-        // Circular Skill Charts
-        function animateCircularSkills() {
-            const circles = document.querySelectorAll('.skill-circle-progress');
-            circles.forEach(circle => {
-                const rect = circle.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    const progress = circle.getAttribute('data-progress');
-                    const circumference = 2 * Math.PI * 80; // radius = 80
-                    const offset = circumference - (progress / 100) * circumference;
-                    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-                    circle.style.strokeDashoffset = offset;
-                }
-            });
-        }
-
         // Easter Egg - Konami Code
         let konamiCode = [];
         const konamiSequence = [
@@ -1536,14 +1368,12 @@
             typeWriter();
             animateOnScroll();
             animateSkillBars();
-            animateCircularSkills();
         });
 
         // Scroll Event Listeners
         window.addEventListener('scroll', function() {
             animateOnScroll();
             animateSkillBars();
-            animateCircularSkills();
         });
 
         // Hover Effects for Interactive Elements
