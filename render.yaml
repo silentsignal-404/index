@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: silent-signal
+    name: silent-signal-backend
     env: node
     plan: free
     buildCommand: npm install
@@ -10,3 +10,4 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
+    healthCheckPath: /health
