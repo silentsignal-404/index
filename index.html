@@ -812,92 +812,6 @@
             left: 10px;
             opacity: 0.3;
         }
-        /* Contact Section */
-        .contact-container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .contact-form {
-            background: rgba(49, 50, 68, 0.6);
-            border: 1px solid rgba(137, 180, 250, 0.2);
-            border-radius: 15px;
-            padding: 3rem;
-            backdrop-filter: blur(20px);
-            margin-top: 2rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--subtext);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(24, 24, 37, 0.8);
-            border: 1px solid rgba(137, 180, 250, 0.2);
-            border-radius: 8px;
-            color: var(--text);
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--blue);
-            box-shadow: var(--glow-blue);
-        }
-
-        .transmit-btn {
-            background: linear-gradient(135deg, var(--blue), var(--mauve));
-            border: none;
-            color: var(--base);
-            padding: 1rem 3rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .transmit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--glow-blue);
-        }
-
-        .transmit-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .transmit-btn:hover::before {
-            left: 100%;
-        }
-
         /* Scroll animations */
         .fade-in {
             opacity: 0;
@@ -1039,7 +953,6 @@
                 <li><a href="#achievements">Operations</a></li>
                 <li><a href="#timeline">Timeline</a></li>
                 <li><a href="#philosophy">Philosophy</a></li>
-                <li><a href="#contact">Transmit</a></li>
             </ul>
         </div>
     </nav>
@@ -1206,30 +1119,6 @@
                     Precision over volume.
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="fade-in">
-        <h2 class="section-title">&gt;_ Transmit</h2>
-        <div class="contact-container">
-            <form class="contact-form" onsubmit="handleSubmit(event)">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="name">Operator Name:</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Signal Frequency:</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="message">Transmission:</label>
-                    <textarea id="message" name="message" rows="6" required></textarea>
-                </div>
-                <button type="submit" class="transmit-btn">Transmit Message</button>
-            </form>
         </div>
     </section>
 
@@ -1451,27 +1340,6 @@
                 konamiCode = [];
             }
         });
-
-        // Contact Form Handler
-        function handleSubmit(event) {
-            event.preventDefault();
-            const btn = event.target.querySelector('.transmit-btn');
-            const originalText = btn.textContent;
-            
-            btn.textContent = 'Transmitting...';
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                btn.textContent = 'Signal Received';
-                btn.style.background = 'var(--green)';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                    btn.disabled = false;
-                    event.target.reset();
-                }, 2000);
-            }, 1000);
-        }
 
         // Navigation Background on Scroll
         window.addEventListener('scroll', function() {
