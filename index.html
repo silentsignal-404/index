@@ -104,6 +104,186 @@
             50% { transform: scale(1.1) rotate(180deg); }
         }
 
+        /* Matrix Code Rain */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -3;
+            overflow: hidden;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--green);
+            opacity: 0.3;
+            animation: matrix-fall linear infinite;
+        }
+
+        @keyframes matrix-fall {
+            0% { top: -100%; opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.1; }
+            100% { top: 100vh; opacity: 0; }
+        }
+
+        /* Scanning Lines */
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            z-index: -2;
+            animation: scan-sweep 8s ease-in-out infinite;
+        }
+
+        @keyframes scan-sweep {
+            0%, 100% { top: 0; opacity: 0; }
+            50% { top: 100vh; opacity: 0.6; }
+        }
+
+        /* Circuit Board Pattern */
+        .circuit-board {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(137, 180, 250, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(203, 166, 247, 0.05) 1px, transparent 1px),
+                linear-gradient(45deg, transparent 48%, rgba(137, 180, 250, 0.02) 49%, rgba(137, 180, 250, 0.02) 51%, transparent 52%);
+            background-size: 100px 100px, 150px 150px, 50px 50px;
+            z-index: -4;
+            animation: circuit-pulse 6s ease-in-out infinite;
+        }
+
+        @keyframes circuit-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Glitch Effect */
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 98%,
+                rgba(137, 180, 250, 0.03) 100%
+            );
+            z-index: -2;
+            animation: glitch-lines 3s linear infinite;
+        }
+
+        @keyframes glitch-lines {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-2px); }
+            40% { transform: translateX(2px); }
+            60% { transform: translateX(-1px); }
+            80% { transform: translateX(1px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Data Stream */
+        .data-stream {
+            position: fixed;
+            top: 0;
+            right: 20px;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                var(--blue) 50%,
+                transparent 100%
+            );
+            z-index: -2;
+            animation: data-flow 4s linear infinite;
+        }
+
+        @keyframes data-flow {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Terminal Overlay */
+        .terminal-overlay {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: rgba(166, 227, 161, 0.3);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Radar Sweep */
+        .radar-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            border: 1px solid rgba(137, 180, 250, 0.2);
+            border-radius: 50%;
+            z-index: -2;
+        }
+
+        .radar-sweep {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(90deg, var(--blue), transparent);
+            transform-origin: left center;
+            animation: radar-rotate 3s linear infinite;
+        }
+
+        @keyframes radar-rotate {
+            0% { transform: translate(0, -50%) rotate(0deg); }
+            100% { transform: translate(0, -50%) rotate(360deg); }
+        }
+
+        /* Binary Rain */
+        .binary-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -4;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: rgba(137, 180, 250, 0.1);
+            overflow: hidden;
+        }
+
+        .binary-column {
+            position: absolute;
+            top: -100%;
+            animation: binary-fall linear infinite;
+        }
+
+        @keyframes binary-fall {
+            0% { top: -100%; }
+            100% { top: 100vh; }
+        }
+
         /* Navigation */
         nav {
             position: fixed;
@@ -911,7 +1091,27 @@
     <!-- Background Effects -->
     <div class="bg-grid"></div>
     <div class="bg-gradient"></div>
+    <div class="circuit-board"></div>
+    <div class="matrix-rain" id="matrixRain"></div>
+    <div class="binary-rain" id="binaryRain"></div>
+    <div class="scan-line"></div>
+    <div class="glitch-overlay"></div>
+    <div class="data-stream"></div>
     <div class="particle-system" id="particles"></div>
+    
+    <!-- Terminal Overlay -->
+    <div class="terminal-overlay" id="terminalOverlay">
+        > system_status: ACTIVE<br>
+        > encryption: AES-256<br>
+        > firewall: ENABLED<br>
+        > intrusion_detection: ON<br>
+        > silent_signal_mode: TRUE
+    </div>
+    
+    <!-- Radar -->
+    <div class="radar-container">
+        <div class="radar-sweep"></div>
+    </div>
     
     <!-- Custom Cursor -->
     <div class="cursor"></div>
@@ -1192,10 +1392,35 @@
             type();
         }
 
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const container = document.getElementById('matrixRain');
+            const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = i * 20 + 'px';
+                column.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                column.style.animationDelay = Math.random() * 2 + 's';
+                
+                // Create random characters for this column
+                let text = '';
+                const length = Math.floor(Math.random() * 20) + 10;
+                for (let j = 0; j < length; j++) {
+                    text += characters.charAt(Math.floor(Math.random() * characters.length)) + '<br>';
+                }
+                column.innerHTML = text;
+                
+                container.appendChild(column);
+            }
+        }
+
         // Particle System
         function createParticles() {
             const container = document.getElementById('particles');
-            const particleCount = 30;
+            const particleCount = 50;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -1210,6 +1435,216 @@
                 
                 container.appendChild(particle);
             }
+        }
+
+        // Create floating code snippets
+        function createFloatingCode() {
+            const codeSnippets = [
+                'function hack() {',
+                'if (vulnerable) {',
+                'exploit.run();',
+                'console.log("pwned");',
+                'return flag;',
+                '}',
+                'SELECT * FROM users;',
+                '<script>alert(1)</script>',
+                'buffer_overflow();',
+                'nc -lvp 4444'
+            ];
+            
+            setInterval(() => {
+                const code = document.createElement('div');
+                code.style.position = 'fixed';
+                code.style.left = Math.random() * window.innerWidth + 'px';
+                code.style.top = window.innerHeight + 'px';
+                code.style.color = 'rgba(137, 180, 250, 0.3)';
+                code.style.fontFamily = 'JetBrains Mono, monospace';
+                code.style.fontSize = '12px';
+                code.style.pointerEvents = 'none';
+                code.style.zIndex = '-1';
+                code.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                
+                document.body.appendChild(code);
+                
+                // Animate upward
+                let pos = window.innerHeight;
+                const animate = () => {
+                    pos -= 1;
+                    code.style.top = pos + 'px';
+                    code.style.opacity = (pos / window.innerHeight);
+                    
+                    if (pos > -50) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        document.body.removeChild(code);
+                    }
+                };
+                animate();
+            }, 3000);
+        }
+
+        // Create binary rain
+        function createBinaryRain() {
+            const container = document.getElementById('binaryRain');
+            const columns = Math.floor(window.innerWidth / 15);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'binary-column';
+                column.style.left = i * 15 + 'px';
+                column.style.animationDuration = (Math.random() * 5 + 3) + 's';
+                column.style.animationDelay = Math.random() * 3 + 's';
+                
+                // Create binary string
+                let binary = '';
+                const length = Math.floor(Math.random() * 30) + 20;
+                for (let j = 0; j < length; j++) {
+                    binary += Math.random() > 0.5 ? '1' : '0';
+                    if (j % 8 === 7) binary += '<br>';
+                }
+                column.innerHTML = binary;
+                
+                container.appendChild(column);
+            }
+        }
+
+        // Update terminal overlay with dynamic content
+        function updateTerminalOverlay() {
+            const overlay = document.getElementById('terminalOverlay');
+            const messages = [
+                '> scanning_network: 192.168.1.0/24',
+                '> payload_injected: SUCCESS',
+                '> backdoor_established: TRUE',
+                '> data_exfiltration: IN_PROGRESS',
+                '> stealth_mode: ACTIVE',
+                '> target_compromised: 100%',
+                '> silent_signal_protocol: ENGAGED'
+            ];
+            
+            setInterval(() => {
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                overlay.innerHTML += '<br>' + randomMessage;
+                
+                // Keep only last 6 lines
+                const lines = overlay.innerHTML.split('<br>');
+                if (lines.length > 6) {
+                    overlay.innerHTML = lines.slice(-6).join('<br>');
+                }
+            }, 4000);
+        }
+
+        // Create glitch effect on scroll
+        function createScrollGlitch() {
+            let ticking = false;
+            
+            function updateGlitch() {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.5;
+                
+                document.querySelector('.glitch-overlay').style.transform = `translateY(${rate}px)`;
+                ticking = false;
+            }
+            
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateGlitch);
+                    ticking = true;
+                }
+            }
+            
+            window.addEventListener('scroll', requestTick);
+        }
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '0';
+            container.style.left = '0';
+            container.style.width = '100%';
+            container.style.height = '100%';
+            container.style.pointerEvents = 'none';
+            container.style.zIndex = '-3';
+            document.body.appendChild(container);
+            
+            const nodes = [];
+            const nodeCount = 15;
+            
+            // Create nodes
+            for (let i = 0; i < nodeCount; i++) {
+                const node = document.createElement('div');
+                node.style.position = 'absolute';
+                node.style.width = '4px';
+                node.style.height = '4px';
+                node.style.background = 'var(--blue)';
+                node.style.borderRadius = '50%';
+                node.style.boxShadow = '0 0 10px var(--blue)';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                
+                container.appendChild(node);
+                nodes.push({
+                    element: node,
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5
+                });
+            }
+            
+            // Animate nodes and draw connections
+            function animateNodes() {
+                const canvas = document.createElement('canvas');
+                canvas.style.position = 'fixed';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.width = '100%';
+                canvas.style.height = '100%';
+                canvas.style.pointerEvents = 'none';
+                canvas.style.zIndex = '-3';
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                document.body.appendChild(canvas);
+                
+                const ctx = canvas.getContext('2d');
+                
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Update node positions
+                    nodes.forEach(node => {
+                        node.x += node.vx;
+                        node.y += node.vy;
+                        
+                        if (node.x < 0 || node.x > window.innerWidth) node.vx *= -1;
+                        if (node.y < 0 || node.y > window.innerHeight) node.vy *= -1;
+                        
+                        node.element.style.left = node.x + 'px';
+                        node.element.style.top = node.y + 'px';
+                    });
+                    
+                    // Draw connections
+                    ctx.strokeStyle = 'rgba(137, 180, 250, 0.1)';
+                    ctx.lineWidth = 1;
+                    
+                    for (let i = 0; i < nodes.length; i++) {
+                        for (let j = i + 1; j < nodes.length; j++) {
+                            const dx = nodes[i].x - nodes[j].x;
+                            const dy = nodes[i].y - nodes[j].y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            if (distance < 150) {
+                                ctx.beginPath();
+                                ctx.moveTo(nodes[i].x, nodes[i].y);
+                                ctx.lineTo(nodes[j].x, nodes[j].y);
+                                ctx.stroke();
+                            }
+                        }
+                    }
+                    
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+            
+            animateNodes();
         }
 
         // Smooth Scrolling
@@ -1299,7 +1734,13 @@
 
         // Initialize Everything
         document.addEventListener('DOMContentLoaded', function() {
+            createMatrixRain();
+            createBinaryRain();
             createParticles();
+            createFloatingCode();
+            createNetworkNodes();
+            updateTerminalOverlay();
+            createScrollGlitch();
             typeWriter();
             animateOnScroll();
         });
