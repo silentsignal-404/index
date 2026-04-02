@@ -880,44 +880,159 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
         }
-        /* Mobile Responsiveness */
+        /* =====================
+           RESPONSIVE DESIGN
+        ===================== */
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 1100;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--blue);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* Tablet - 1024px */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 3.5rem; }
+            .section-title { font-size: 2.2rem; }
+            .team-grid { grid-template-columns: 1fr; }
+            .achievements-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Mobile - 768px */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .hero-tagline {
-                font-size: 1.1rem;
-            }
-            
+            /* Nav */
+            .hamburger { display: flex; }
+
             .nav-links {
                 display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: rgba(24, 24, 37, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2.5rem;
+                z-index: 1050;
             }
-            
+
+            .nav-links.open { display: flex; }
+
+            .nav-links a {
+                font-size: 1.4rem;
+                color: var(--text);
+            }
+
+            /* Hero */
+            .hero { padding: 0 1.5rem; }
+            .hero-title { font-size: 2.4rem; }
+            .hero-tagline { font-size: 1rem; }
+            .hero-buttons { flex-direction: column; align-items: center; gap: 1rem; }
+            .btn { width: 100%; max-width: 280px; text-align: center; padding: 0.9rem 1.5rem; }
+            .terminal-line { font-size: 0.8rem; }
+
+            /* Sections */
+            section {
+                padding: 4rem 1.2rem;
+            }
+
+            .section-title { font-size: 1.8rem; margin-bottom: 2.5rem; }
+
+            /* Team cards */
             .team-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
-            
-            .timeline-line {
-                left: 30px;
+
+            .operator-card { padding: 1.5rem; }
+            .operator-info h3 { font-size: 1.1rem; }
+            .skills-grid { grid-template-columns: 1fr 1fr; }
+
+            /* Achievements */
+            .achievements-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
-            
-            .timeline-item {
-                justify-content: flex-start;
-                padding-left: 60px;
-                padding-right: 0;
-            }
-            
+
+            .achievement-card { padding: 1.5rem; }
+            .achievement-rank { font-size: 2rem; }
+
+            /* Timeline - single column on mobile */
+            .timeline-line { left: 20px; }
+            .timeline-pulse { left: 20px; }
+
+            .timeline-item,
             .timeline-item:nth-child(even) {
                 justify-content: flex-start;
-                padding-left: 60px;
+                padding-left: 50px;
                 padding-right: 0;
             }
-            
-            .timeline-node {
-                left: 15px !important;
+
+            .timeline-node,
+            .timeline-item:nth-child(even) .timeline-node {
+                left: 6px !important;
                 right: auto !important;
+                width: 22px;
+                height: 22px;
+                top: 20px;
             }
+
+            .timeline-content {
+                max-width: 100%;
+                padding: 1.2rem;
+            }
+
+            .timeline-title { font-size: 1rem; }
+            .timeline-date { font-size: 0.8rem; }
+
+            /* Philosophy */
+            .philosophy { padding: 2.5rem 1.2rem; }
+            .philosophy-title { font-size: 1.5rem; }
+            .philosophy-quotes { grid-template-columns: 1fr; gap: 1.2rem; }
+            .philosophy-quote { font-size: 1rem; }
+
+            /* Radar - smaller on mobile */
+            .radar-container {
+                width: 60px;
+                height: 60px;
+                bottom: 12px;
+                right: 12px;
+            }
+
+            /* Hide cursor on touch devices */
+            .cursor, .cursor-trail { display: none; }
+        }
+
+        /* Small phones - 480px */
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.9rem; }
+            .hero-tagline { font-size: 0.9rem; }
+            .section-title { font-size: 1.5rem; }
+            .operator-avatar { width: 48px; height: 48px; font-size: 1.2rem; }
+            .operator-info h3 { font-size: 1rem; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .achievement-rank { font-size: 1.8rem; }
+            .philosophy-title { font-size: 1.3rem; }
         }
     </style>
 </head>
@@ -947,12 +1062,15 @@
     <nav>
         <div class="nav-container">
             <div class="logo">Silent Signal</div>
-            <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">Operators</a></li>
-                <li><a href="#achievements">Operations</a></li>
-                <li><a href="#timeline">Timeline</a></li>
-                <li><a href="#philosophy">Philosophy</a></li>
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="closeMenu()">Home</a></li>
+                <li><a href="#about" onclick="closeMenu()">Operators</a></li>
+                <li><a href="#achievements" onclick="closeMenu()">Operations</a></li>
+                <li><a href="#timeline" onclick="closeMenu()">Timeline</a></li>
+                <li><a href="#philosophy" onclick="closeMenu()">Philosophy</a></li>
             </ul>
         </div>
     </nav>
@@ -1289,6 +1407,17 @@
                 p.style.background = colors[Math.floor(Math.random() * colors.length)];
                 container.appendChild(p);
             }
+        }
+
+        // Hamburger Menu
+        function toggleMenu() {
+            document.getElementById('hamburger').classList.toggle('open');
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        function closeMenu() {
+            document.getElementById('hamburger').classList.remove('open');
+            document.getElementById('navLinks').classList.remove('open');
         }
 
         // Smooth Scrolling
