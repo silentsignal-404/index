@@ -238,10 +238,14 @@
             gap: 0.6rem;
         }
 
-        .logo img {
+        .logo-img {
+            width: 36px;
             height: 36px;
-            width: auto;
-            filter: drop-shadow(0 0 8px rgba(137, 180, 250, 0.5));
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid rgba(137, 180, 250, 0.4);
+            box-shadow: var(--glow-blue);
+            flex-shrink: 0;
         }
 
         .logo::after {
@@ -1098,7 +1102,7 @@
     <nav>
         <div class="nav-container">
             <div class="logo">
-                <img src="logo.png" alt="Silent Signal Logo">
+                <img src="logo.png" alt="Logo" class="logo-img">
                 Silent Signal
             </div>
             <div class="hamburger" id="hamburger" onclick="toggleMenu()">
@@ -1118,7 +1122,6 @@
         <div class="signal-wave" style="top: 20%;"></div>
         <div class="signal-wave" style="top: 80%; animation-delay: 1.5s;"></div>
         <div class="hero-content">
-            <img src="logo.png" alt="Silent Signal Logo" style="height: 90px; width: auto; margin-bottom: 1rem; filter: drop-shadow(0 0 16px rgba(137, 180, 250, 0.5));">
             <div class="terminal-line">> initializing silent_signal...</div>
             <div class="terminal-line" style="animation-delay: 0.5s;">> status: active</div>
             <h1 class="hero-title">Silent Signal</h1>
