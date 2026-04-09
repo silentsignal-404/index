@@ -1141,9 +1141,7 @@
         <div class="signal-wave" style="top: 20%;"></div>
         <div class="signal-wave" style="top: 80%; animation-delay: 1.5s;"></div>
         <div class="hero-content">
-            <div class="terminal-block" id="terminalBlock">
-                <!-- lines injected by JS -->
-            </div>
+            <div id="terminalBlock" style="margin-bottom:1.5rem; font-family:'JetBrains Mono',monospace; font-size:0.9rem; color:var(--green); text-align:center;"></div>
             <h1 class="hero-title">Silent Signal</h1>
             <p class="hero-tagline">We don't make noise. We send signals.</p>
             <div class="hero-buttons">
@@ -1372,74 +1370,39 @@
             });
         });
 
-        // Real Linux terminal animation
+        // Terminal animation - clean, matches site style
         function typeWriter() {
             const block = document.getElementById('terminalBlock');
-            const commands = [
-                { prompt: 'root@silent-signal:~# ', cmd: './init silent_signal' },
-                { prompt: 'root@silent-signal:~# ', cmd: 'cat status.txt', output: '[ OK ] status: active' },
+            const lines = [
+                '> initializing silent_signal...',
+                '> status: active'
             ];
 
-            let cmdIndex = 0;
+            let lineIndex = 0;
 
-            function runNext() {
-                if (cmdIndex >= commands.length) return;
-                const c = commands[cmdIndex++];
+            function typeLine() {
+                if (lineIndex >= lines.length) return;
 
-                // Create prompt + command line
-                const line = document.createElement('div');
-                line.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.85rem;margin-bottom:0.3rem;color:var(--green);white-space:nowrap;text-align:left;';
-                block.appendChild(line);
+                const div = document.createElement('div');
+                div.style.marginBottom = '0.5rem';
+                div.style.minHeight = '1.2em';
+                block.appendChild(div);
 
-                // Create cursor
-                const cursor = document.createElement('span');
-                cursor.className = 'terminal-cursor';
-                line.appendChild(cursor);
-
-                // Type prompt first (dim color)
-                const promptSpan = document.createElement('span');
-                promptSpan.style.color = 'var(--subtext)';
-                promptSpan.textContent = '';
-                line.insertBefore(promptSpan, cursor);
-
+                const text = lines[lineIndex++];
                 let i = 0;
-                // Type prompt
-                const typePrompt = setInterval(() => {
-                    promptSpan.textContent = c.prompt.substring(0, i + 1);
+
+                const interval = setInterval(() => {
+                    div.textContent = text.substring(0, i + 1) + '█';
                     i++;
-                    if (i >= c.prompt.length) {
-                        clearInterval(typePrompt);
-                        // Pause then type command
-                        setTimeout(() => {
-                            const cmdSpan = document.createElement('span');
-                            cmdSpan.style.color = 'var(--text)';
-                            cmdSpan.textContent = '';
-                            line.insertBefore(cmdSpan, cursor);
-                            let j = 0;
-                            const typeCmd = setInterval(() => {
-                                cmdSpan.textContent = c.cmd.substring(0, j + 1);
-                                j++;
-                                if (j >= c.cmd.length) {
-                                    clearInterval(typeCmd);
-                                    // Remove cursor, show output if any, then next command
-                                    setTimeout(() => {
-                                        cursor.remove();
-                                        if (c.output) {
-                                            const out = document.createElement('div');
-                                            out.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.85rem;margin-bottom:0.3rem;color:var(--blue);text-align:left;';
-                                            out.textContent = c.output;
-                                            block.appendChild(out);
-                                        }
-                                        setTimeout(runNext, 400);
-                                    }, 300);
-                                }
-                            }, 55);
-                        }, 200);
+                    if (i >= text.length) {
+                        clearInterval(interval);
+                        div.textContent = text;
+                        setTimeout(typeLine, 500);
                     }
-                }, 18);
+                }, 45);
             }
 
-            runNext();
+            typeLine();
         }
 
         // Signal Wave Canvas - the "Silent Signal" background effect
