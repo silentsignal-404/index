@@ -314,10 +314,36 @@
             font-family: 'JetBrains Mono', monospace;
             color: var(--green);
             font-size: 0.9rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.4rem;
             opacity: 0;
             white-space: nowrap;
             overflow: hidden;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .terminal-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1em;
+            background: var(--green);
+            vertical-align: text-bottom;
+            animation: cur-blink 0.7s step-end infinite;
+            margin-left: 1px;
+        }
+
+        @keyframes cur-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
 
         .hero-title {
@@ -1115,9 +1141,9 @@
         <div class="signal-wave" style="top: 20%;"></div>
         <div class="signal-wave" style="top: 80%; animation-delay: 1.5s;"></div>
         <div class="hero-content">
-            <div class="terminal-line">> initializing silent_signal...</div>
-            <div class="terminal-line" style="animation-delay: 0.5s;">> status: active</div>
-            <div class="terminal-line" style="animation-delay: 1s;">> nepal_rank: #7 &nbsp;|&nbsp; global_rank: #650</div>
+            <div class="terminal-block" id="terminalBlock">
+                <!-- lines injected by JS -->
+            </div>
             <h1 class="hero-title">Silent Signal</h1>
             <p class="hero-tagline">We don't make noise. We send signals.</p>
             <div class="hero-buttons">
@@ -1346,27 +1372,74 @@
             });
         });
 
-        // Terminal line typing animation
+        // Real Linux terminal animation
         function typeWriter() {
-            const lines = document.querySelectorAll('.terminal-line');
-            
-            function typeLine(el, delay) {
-                const text = el.textContent.trim();
-                el.textContent = '';
-                el.style.opacity = '1';
+            const block = document.getElementById('terminalBlock');
+            const commands = [
+                { prompt: 'root@silent-signal:~# ', cmd: './init silent_signal' },
+                { prompt: 'root@silent-signal:~# ', cmd: 'cat status.txt', output: '[ OK ] status: active' },
+            ];
+
+            let cmdIndex = 0;
+
+            function runNext() {
+                if (cmdIndex >= commands.length) return;
+                const c = commands[cmdIndex++];
+
+                // Create prompt + command line
+                const line = document.createElement('div');
+                line.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.85rem;margin-bottom:0.3rem;color:var(--green);white-space:nowrap;text-align:left;';
+                block.appendChild(line);
+
+                // Create cursor
+                const cursor = document.createElement('span');
+                cursor.className = 'terminal-cursor';
+                line.appendChild(cursor);
+
+                // Type prompt first (dim color)
+                const promptSpan = document.createElement('span');
+                promptSpan.style.color = 'var(--subtext)';
+                promptSpan.textContent = '';
+                line.insertBefore(promptSpan, cursor);
+
                 let i = 0;
-                setTimeout(() => {
-                    const interval = setInterval(() => {
-                        el.textContent = text.substring(0, i + 1);
-                        i++;
-                        if (i >= text.length) clearInterval(interval);
-                    }, 40);
-                }, delay);
+                // Type prompt
+                const typePrompt = setInterval(() => {
+                    promptSpan.textContent = c.prompt.substring(0, i + 1);
+                    i++;
+                    if (i >= c.prompt.length) {
+                        clearInterval(typePrompt);
+                        // Pause then type command
+                        setTimeout(() => {
+                            const cmdSpan = document.createElement('span');
+                            cmdSpan.style.color = 'var(--text)';
+                            cmdSpan.textContent = '';
+                            line.insertBefore(cmdSpan, cursor);
+                            let j = 0;
+                            const typeCmd = setInterval(() => {
+                                cmdSpan.textContent = c.cmd.substring(0, j + 1);
+                                j++;
+                                if (j >= c.cmd.length) {
+                                    clearInterval(typeCmd);
+                                    // Remove cursor, show output if any, then next command
+                                    setTimeout(() => {
+                                        cursor.remove();
+                                        if (c.output) {
+                                            const out = document.createElement('div');
+                                            out.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:0.85rem;margin-bottom:0.3rem;color:var(--blue);text-align:left;';
+                                            out.textContent = c.output;
+                                            block.appendChild(out);
+                                        }
+                                        setTimeout(runNext, 400);
+                                    }, 300);
+                                }
+                            }, 55);
+                        }, 200);
+                    }
+                }, 18);
             }
 
-            lines.forEach((line, index) => {
-                typeLine(line, index * 900);
-            });
+            runNext();
         }
 
         // Signal Wave Canvas - the "Silent Signal" background effect
