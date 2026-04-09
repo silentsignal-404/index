@@ -316,11 +316,8 @@
             font-size: 0.9rem;
             margin-bottom: 1rem;
             opacity: 0;
-            animation: terminal-boot 0.5s ease forwards;
-        }
-
-        @keyframes terminal-boot {
-            to { opacity: 1; }
+            white-space: nowrap;
+            overflow: hidden;
         }
 
         .hero-title {
@@ -345,18 +342,14 @@
             color: var(--subtext);
             margin-bottom: 3rem;
             font-weight: 300;
-            opacity: 0;
-            animation: fade-in-up 1s ease 1s forwards;
+            opacity: 1;
         }
 
-        .typing-text {
-            border-right: 2px solid var(--blue);
-            animation: blink 1s infinite;
-        }
+        .typing-text { /* static */ }
 
         @keyframes blink {
-            0%, 50% { border-color: var(--blue); }
-            51%, 100% { border-color: transparent; }
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         @keyframes fade-in-up {
@@ -1126,9 +1119,7 @@
             <div class="terminal-line" style="animation-delay: 0.5s;">> status: active</div>
             <div class="terminal-line" style="animation-delay: 1s;">> nepal_rank: #7 &nbsp;|&nbsp; global_rank: #650</div>
             <h1 class="hero-title">Silent Signal</h1>
-            <p class="hero-tagline">
-                <span class="typing-text" id="typingText">We don't make noise. We send signals.</span>
-            </p>
+            <p class="hero-tagline">We don't make noise. We send signals.</p>
             <div class="hero-buttons">
                 <a href="#achievements" class="btn">View Operations</a>
                 <a href="#timeline" class="btn btn-secondary">Trace Timeline</a>
@@ -1355,40 +1346,27 @@
             });
         });
 
-        // Typing Animation
+        // Terminal line typing animation
         function typeWriter() {
-            const texts = [
-                'We don\'t make noise. We send signals.',
-                'Precision-driven cybersecurity operations.',
-                'Elite CTF reconnaissance specialists.',
-                'Silent infiltration. Loud results.'
-            ];
-            let textIndex = 0;
-            let charIndex = 0;
-            const typingElement = document.getElementById('typingText');
+            const lines = document.querySelectorAll('.terminal-line');
             
-            function type() {
-                if (charIndex < texts[textIndex].length) {
-                    typingElement.textContent = texts[textIndex].substring(0, charIndex + 1);
-                    charIndex++;
-                    setTimeout(type, 100);
-                } else {
-                    setTimeout(erase, 3000);
-                }
+            function typeLine(el, delay) {
+                const text = el.textContent.trim();
+                el.textContent = '';
+                el.style.opacity = '1';
+                let i = 0;
+                setTimeout(() => {
+                    const interval = setInterval(() => {
+                        el.textContent = text.substring(0, i + 1);
+                        i++;
+                        if (i >= text.length) clearInterval(interval);
+                    }, 40);
+                }, delay);
             }
-            
-            function erase() {
-                if (charIndex > 0) {
-                    typingElement.textContent = texts[textIndex].substring(0, charIndex - 1);
-                    charIndex--;
-                    setTimeout(erase, 50);
-                } else {
-                    textIndex = (textIndex + 1) % texts.length;
-                    setTimeout(type, 500);
-                }
-            }
-            
-            type();
+
+            lines.forEach((line, index) => {
+                typeLine(line, index * 900);
+            });
         }
 
         // Signal Wave Canvas - the "Silent Signal" background effect
@@ -1587,15 +1565,6 @@
             });
         });
 
-        // Terminal Boot Sequence
-        window.addEventListener('load', function() {
-            const terminalLines = document.querySelectorAll('.terminal-line');
-            terminalLines.forEach((line, index) => {
-                setTimeout(() => {
-                    line.style.opacity = '1';
-                }, index * 500);
-            });
-        });
     </script>
 </body>
 </html>
